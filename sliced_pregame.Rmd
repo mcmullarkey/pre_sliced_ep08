@@ -119,8 +119,8 @@ d %>%
 library(ggalluvial)
 library(showtext)
 
-font_add_google(name = "Concert One", # Name of the font on the Google Fonts site
-                family = "concert") # Name you want to use to call the font
+# font_add_google(name = "Concert One", # Name of the font on the Google Fonts site
+#                 family = "concert") # Name you want to use to call the font
 
 d %>% 
   filter(income_category != "Unknown" & education_level != "Unknown") %>% # Essentially missing data + clutters the plot
@@ -154,6 +154,8 @@ d %>%
         axis.title.y = element_text(size = 14),
         legend.position = "none",
         plot.background = element_rect("gray"))
+
+ggsave("sanky.jpg")
 
 ```
 
