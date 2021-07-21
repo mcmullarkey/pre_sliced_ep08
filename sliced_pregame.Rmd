@@ -117,23 +117,17 @@ d %>%
 ```{r}
 
 library(ggalluvial)
+library(showtext)
 
-glimpse(d)
-
-skim(d)
-
-d %>% 
-   count(income_category)
- 
-d %>% 
-   count(education_level)
+font_add_google(name = "Concert One", # Name of the font on the Google Fonts site
+                family = "concert") # Name you want to use to call the font
 
 d %>% 
-  filter(income_category != "Unknown" & education_level != "Unknown") %>% 
+  filter(income_category != "Unknown" & education_level != "Unknown") %>% # Essentially missing data + clutters the plot
   mutate(education_level = as.character(education_level),
     education_level = factor(case_when(
     
-    education_level == "Uneducated" ~ "< High School",
+    education_level == "Uneducated" ~ "< High School", # Let's be descriptive instead of pejorative here
     TRUE ~ education_level
     
   ))) %>% 
@@ -146,12 +140,12 @@ d %>%
                                        "$40K - $60K", "Less than $40K")) %>% 
   ggplot(aes(axis1 = education_level, axis2 = income_category, y = freq)) +
   geom_alluvium(aes(fill = education_level)) + 
-  scale_x_discrete(limits = c("Education Level", "Income Bracket"), expand = c(.05, .05)) +
+  scale_x_discrete(limits = c("Education Level", "Income Level"), expand = c(.05, .05)) +
   geom_stratum(width = 1/8, fill = "black", color = "grey") +
   geom_label(stat = "stratum", aes(label = after_stat(stratum)), family = "concert") +
   labs(y = "# of People", fill = "Education",
        title = "How Does Education Level Relate to Income Level in SLICED EP 07 Data?",
-       subtitle = "People Seem Almost Suspiciously Upwardly Mobile (Good for them! And also...)") +
+       subtitle = "People Seem Almost Suspiciously Upwardly Mobile in This Data (Good for them! And also...)") +
   scale_fill_viridis_d(option = "rocket") +
   theme_dark() +
   theme(text = element_text(family = "concert"),
