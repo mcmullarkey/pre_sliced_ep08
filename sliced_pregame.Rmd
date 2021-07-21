@@ -114,7 +114,7 @@ d %>%
   annotate("rect", xmin = 0, xmax = 7000, ymin = 1, ymax = 3, alpha = 0.2)
 
 ```
-```{r, warning=FALSE}
+```{r}
 
 library(ggalluvial)
 
@@ -129,20 +129,29 @@ d %>%
    count(education_level)
 
 d %>% 
+  filter(income_category != "Unknown" & education_level != "Unknown") %>% 
+  mutate(education_level = as.character(education_level),
+    education_level = factor(case_when(
+    
+    education_level == "Uneducated" ~ "< High School",
+    TRUE ~ education_level
+    
+  ))) %>% 
   group_by(income_category, education_level) %>% 
   summarise(freq = n()) %>% 
   mutate(
          education_level = fct_relevel(education_level, "Doctorate", "Post-Graduate", "Graduate", "College",
-                                       "High School","Uneducated", "Unknown"),
+                                       "High School","Uneducated"),
          income_category = fct_relevel(income_category, "$120K +", "$80K - $120K", "$60K - $80K",
-                                       "$40K - $60K", "Less than $40K", "Unknown")) %>% 
+                                       "$40K - $60K", "Less than $40K")) %>% 
   ggplot(aes(axis1 = education_level, axis2 = income_category, y = freq)) +
   geom_alluvium(aes(fill = education_level)) + 
   scale_x_discrete(limits = c("Education Level", "Income Bracket"), expand = c(.05, .05)) +
   geom_stratum(width = 1/8, fill = "black", color = "grey") +
   geom_label(stat = "stratum", aes(label = after_stat(stratum)), family = "concert") +
-  labs(y = "Number of People", fill = "Education",
-       title = "Some Variability in Folks' Income Bracket By Education") +
+  labs(y = "# of People", fill = "Education",
+       title = "How Does Education Level Relate to Income Level in SLICED EP 07 Data?",
+       subtitle = "People Seem Almost Suspiciously Upwardly Mobile (Good for them! And also...)") +
   scale_fill_viridis_d(option = "rocket") +
   theme_dark() +
   theme(text = element_text(family = "concert"),
