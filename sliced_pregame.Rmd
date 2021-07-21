@@ -157,27 +157,3 @@ d %>%
 
 ```
 
-```{r}
-
-test <- d %>% 
-  group_by(income_category, education_level) %>% 
-  summarise(freq = n()) %>% 
-  mutate(
-         education_level = fct_relevel(education_level, "Doctorate", "Post-Graduate", "Graduate", "College",
-                                       "High School","Uneducated", "Unknown"),
-         income_category = fct_relevel(income_category, "$120K +", "$80K - $120K", "$60K - $80K",
-                                       "$40K - $60K", "Less than $40K", "Unknown"))
-
-test %>% 
-  count(income_category)
-
-levels(test$income_category)
-
-education_level = case_when(
-    education_level == "Post-Graduate" ~ factor("Post-Grad"),
-    education_level == "Uneducated" ~ factor("< High School"),
-    TRUE ~ education_level
-  ),
-
-```
-
